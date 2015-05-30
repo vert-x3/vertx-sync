@@ -18,22 +18,24 @@ public class SyncAdaptorTest {
 
     AsyncInterface ai = new AsyncInterfaceImpl(vertx);
 
-    SyncInterface si = new MyAsync(ai);
+    SyncInterface si = new SyncInterfaceImpl(ai);
 
     new Fiber<Void>() {
       @Override
       protected Void run() throws SuspendExecution, InterruptedException {
 
-        String res1 = si.doSomething("hello1");
+        String res1 = null;
+        try {
+          res1 = si.doSomething("hello1");
+        } catch (Throwable t) {
+          t.printStackTrace();
+          throw new RuntimeException(t);
+        }
 
         System.out.println("Got res " + res1);
 
         return null;
       }
-    }.start();
-
-    Thread.sleep(100000);
-
-
+    }.start().join();
   }
 }

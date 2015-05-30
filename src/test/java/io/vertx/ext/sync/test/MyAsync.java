@@ -1,6 +1,7 @@
 package io.vertx.ext.sync.test;
 
 import co.paralleluniverse.fibers.FiberAsync;
+import co.paralleluniverse.fibers.SuspendExecution;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -8,7 +9,7 @@ import io.vertx.core.Handler;
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class MyAsync extends FiberAsync<String, Throwable> implements Handler<AsyncResult<String>>, SyncInterface  {
+public class MyAsync extends FiberAsync<String, Throwable> implements Handler<AsyncResult<String>>  {
 
   private AsyncInterface ai;
 
@@ -28,19 +29,5 @@ public class MyAsync extends FiberAsync<String, Throwable> implements Handler<As
     } else {
       asyncFailed(res.cause());
     }
-  }
-
-  @Override
-  public String doSomething(String wibble) {
-
-    String res;
-
-    try {
-      res = run();
-    } catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-
-    return res;
   }
 }
