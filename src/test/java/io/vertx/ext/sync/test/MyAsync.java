@@ -9,17 +9,11 @@ import io.vertx.core.Handler;
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class MyAsync extends FiberAsync<String, Throwable> implements Handler<AsyncResult<String>>  {
-
-  private AsyncInterface ai;
+public abstract class MyAsync extends FiberAsync<String, Throwable> implements Handler<AsyncResult<String>>  {
+  protected AsyncInterface ai;
 
   public MyAsync(AsyncInterface ai) {
     this.ai = ai;
-  }
-
-  @Override
-  protected void requestAsync() {
-    ai.doSomething("hello", this);
   }
 
   @Override

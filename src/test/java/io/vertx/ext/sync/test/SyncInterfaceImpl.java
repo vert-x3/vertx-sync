@@ -16,6 +16,11 @@ public class SyncInterfaceImpl implements SyncInterface {
 
   @Override
   public String doSomething(String wibble) throws SuspendExecution, Throwable {
-    return new MyAsync(asyncInterface).run();
+    return new MyAsync(asyncInterface) {
+      @Override
+      protected void requestAsync() {
+        ai.doSomething("hello", this);
+      }
+    }.run();
   }
 }
