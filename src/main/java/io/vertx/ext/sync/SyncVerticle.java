@@ -1,7 +1,9 @@
 package io.vertx.ext.sync;
 
-import co.paralleluniverse.fibers.*;
-import io.vertx.core.*;
+import co.paralleluniverse.fibers.FiberScheduler;
+import co.paralleluniverse.fibers.Suspendable;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 
 /**
  *
@@ -10,74 +12,53 @@ import io.vertx.core.*;
 public abstract class SyncVerticle extends AbstractVerticle {
 
   protected FiberScheduler instanceScheduler;
-  protected Thread eventLoop;
 
   @Override
   public void start(Future<Void> startFuture) throws Exception {
-    if (context.isWorkerContext()) {
-      throw new IllegalStateException("Vert.x sync can only be used with standard verticles");
-    }
-    eventLoop = Thread.currentThread();
-    instanceScheduler = new FiberExecutorScheduler("mine", command -> {
-      if (Thread.currentThread() != eventLoop) {
-        context.runOnContext(v -> command.run());
-      } else {
-        // Just run directly
-        command.run();
-      }
-    });
-    new Fiber<Void>(instanceScheduler) {
+    instanceScheduler = Sync.getContextScheduler();
+    Sync.runOnFiber(instanceScheduler, new Runnable() {
+      // TODO - for some reason this does not work if we use a lambda instead of anonymous class
       @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
+      @Suspendable
+      public void run() {
         try {
           SyncVerticle.this.start();
           startFuture.complete();
         } catch (Throwable t) {
           startFuture.fail(t);
         }
-        return null;
       }
-    }.start();
+    });
   }
 
   @Override
   public void stop(Future<Void> stopFuture) throws Exception {
-    new Fiber<Void>(instanceScheduler) {
+    Sync.runOnFiber(instanceScheduler,  new Runnable() {
+      // TODO - for some reason this does not work if we use a lambda instead of anonymous class
       @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
+      @Suspendable
+      public void run() {
         try {
           SyncVerticle.this.stop();
           stopFuture.complete();
         } catch (Throwable t) {
           stopFuture.fail(t);
+        } finally {
+          Sync.removeContextScheduler();
         }
-        return null;
       }
-    }.start();
+    });
   }
 
-  private void runOnFiber(Runnable runner) {
-    new Fiber<Void>(instanceScheduler) {
-      @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
-        runner.run();
-        return null;
-      }
-    }.start();
-  }
 
-  public <T> Handler<T> fiberHandler(Handler<T> handler) {
-    return p -> runOnFiber(() -> handler.handle(p));
+  @Override
+  @Suspendable
+  public void start() throws Exception {
   }
 
   @Override
   @Suspendable
-  public void start() {
-  }
-
-  @Override
-  @Suspendable
-  public void stop() {
+  public void stop() throws Exception {
   }
 
 }

@@ -1,4 +1,4 @@
-package io.vertx.ext.testmodel;
+package io.vertx.ext.sync.testmodel;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -47,6 +47,11 @@ public class AsyncInterfaceImpl implements AsyncInterface {
   @Override
   public void methodWithParamsAndHandlerInterface(String foo, long bar, Handler<AsyncResult<ReturnedInterface>> resultHandler) {
     vertx.runOnContext(v -> resultHandler.handle(Future.succeededFuture(new ReturnedInterfaceImpl(vertx))));
+  }
+
+  @Override
+  public void methodThatFails(String foo, Handler<AsyncResult<String>> resultHandler) {
+    vertx.runOnContext(v -> resultHandler.handle(Future.failedFuture(new Exception(foo))));
   }
 
 }

@@ -1,0 +1,25 @@
+= Synchronous but non-OS-thread-blocking verticles
+
+*Love scalability?*
+
+*Hate blocking kernel threads?*
+
+*Hate callback hell?*
+
+*Want to squash the pyramid of doom?*
+
+*Well, now you can have your cake and eat it...*
+
+Vertx-sync allows you to deploy verticles that run using *Fibers*. Fibers are very lightweight threads that can be
+blocked without blocking a kernel thread.
+
+This enables you to write your verticle code in a familiar synchronous style (i.e. no callbacks or promises or Rx).
+
+As no kernel threads are blocked your application retains the scalability advantages of a non (kernel thread) blocking
+application.
+
+Please see the in source asciidoc documentation or the main documentation on the web-site for a full description
+of vertx-sync
+
+* Web-site docs
+* link:src/main/asciidoc/java/index.adoc[Java in-source docs]

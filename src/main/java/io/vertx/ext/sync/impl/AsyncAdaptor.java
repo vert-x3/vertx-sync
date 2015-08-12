@@ -1,4 +1,4 @@
-package io.vertx.ext.sync;
+package io.vertx.ext.sync.impl;
 
 import co.paralleluniverse.fibers.FiberAsync;
 import io.vertx.core.AsyncResult;
