@@ -84,7 +84,8 @@ public class Sync {
    */
   @Suspendable
   public static <T> Handler<T> fiberHandler(Handler<T> handler) {
-    return p -> new Fiber<Void>(getContextScheduler(), () -> handler.handle(p)).start();
+    FiberScheduler scheduler = getContextScheduler();
+    return p -> new Fiber<Void>(scheduler, () -> handler.handle(p)).start();
   }
 
   /**
