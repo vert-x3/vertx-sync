@@ -19,40 +19,29 @@ public abstract class SyncVerticle extends AbstractVerticle {
   @Override
   public void start(Future<Void> startFuture) throws Exception {
     instanceScheduler = Sync.getContextScheduler();
-    Sync.runOnFiber(instanceScheduler, new Runnable() {
-      // TODO - for some reason this does not work if we use a lambda instead of anonymous class
-      @Override
-      @Suspendable
-      public void run() {
-        try {
-          SyncVerticle.this.start();
-          startFuture.complete();
-        } catch (Throwable t) {
-          startFuture.fail(t);
-        }
+    Sync.runOnFiber(instanceScheduler, () -> {
+      try {
+        SyncVerticle.this.start();
+        startFuture.complete();
+      } catch (Throwable t) {
+        startFuture.fail(t);
       }
     });
   }
 
   @Override
   public void stop(Future<Void> stopFuture) throws Exception {
-    Sync.runOnFiber(instanceScheduler,  new Runnable() {
-      // TODO - for some reason this does not work if we use a lambda instead of anonymous class
-      @Override
-      @Suspendable
-      public void run() {
-        try {
-          SyncVerticle.this.stop();
-          stopFuture.complete();
-        } catch (Throwable t) {
-          stopFuture.fail(t);
-        } finally {
-          Sync.removeContextScheduler();
-        }
+    Sync.runOnFiber(instanceScheduler,  () -> {
+      try {
+        SyncVerticle.this.stop();
+        stopFuture.complete();
+      } catch (Throwable t) {
+        stopFuture.fail(t);
+      } finally {
+        Sync.removeContextScheduler();
       }
     });
   }
-
 
   /**
    * Override this method in your verticle

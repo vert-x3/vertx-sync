@@ -99,7 +99,7 @@ Examples include event bus message consumers and HTTP server requests on an HTTP
 
 Vert-sync allows you to receive events from such streams in a synchronous way.
 
-You do this by with an instance of `link:../../apidocs/io/vertx/ext/sync/HandlerReceiverAdaptor.html[HandlerReceiverAdaptor]` which implements both
+You do this with an instance of `link:../../apidocs/io/vertx/ext/sync/HandlerReceiverAdaptor.html[HandlerReceiverAdaptor]` which implements both
 `link:../../apidocs/io/vertx/core/Handler.html[Handler]` and `link:../../apidocs/io/vertx/ext/sync/Receiver.html[Receiver]`. You create an instance using
 `link:../../apidocs/io/vertx/ext/sync/Sync.html#streamAdaptor--[Sync.streamAdaptor]`.
 

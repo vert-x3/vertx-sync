@@ -1,6 +1,9 @@
 package io.vertx.ext.sync;
 
-import co.paralleluniverse.fibers.*;
+import co.paralleluniverse.fibers.Fiber;
+import co.paralleluniverse.fibers.FiberExecutorScheduler;
+import co.paralleluniverse.fibers.FiberScheduler;
+import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.strands.channels.Channel;
 import io.vertx.core.*;
 import io.vertx.ext.sync.impl.AsyncAdaptor;
@@ -116,14 +119,8 @@ public class Sync {
    * @param runner  the action
    */
   @Suspendable
-  public static void runOnFiber(FiberScheduler fiberScheduler, Runnable runner) {
-    new Fiber<Void>(fiberScheduler) {
-      @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
-        runner.run();
-        return null;
-      }
-    }.start();
+  public static void runOnFiber(FiberScheduler fiberScheduler, SuspendableRunnable runner) {
+    new Fiber<Void>(fiberScheduler, runner::run).start();
   }
 
   /**
