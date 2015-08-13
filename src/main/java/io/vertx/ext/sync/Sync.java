@@ -84,7 +84,7 @@ public class Sync {
    */
   @Suspendable
   public static <T> Handler<T> fiberHandler(Handler<T> handler) {
-    return p -> runOnFiber(getContextScheduler(), () -> handler.handle(p));
+    return p -> new Fiber<Void>(getContextScheduler(), () -> handler.handle(p)).start();
   }
 
   /**
@@ -110,17 +110,6 @@ public class Sync {
   @Suspendable
   public static <T> HandlerReceiverAdaptor<T> streamAdaptor(Channel<T> channel) {
     return new HandlerReceiverAdaptorImpl<>(getContextScheduler(), channel);
-  }
-
-  /**
-   * Run the specified action on a fiber
-   *
-   * @param fiberScheduler  the schedulre to use
-   * @param runner  the action
-   */
-  @Suspendable
-  public static void runOnFiber(FiberScheduler fiberScheduler, SuspendableRunnable runner) {
-    new Fiber<Void>(fiberScheduler, runner::run).start();
   }
 
   /**

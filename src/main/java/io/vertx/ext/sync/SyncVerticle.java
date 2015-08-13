@@ -1,5 +1,6 @@
 package io.vertx.ext.sync;
 
+import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.FiberScheduler;
 import co.paralleluniverse.fibers.Suspendable;
 import io.vertx.core.AbstractVerticle;
@@ -19,19 +20,19 @@ public abstract class SyncVerticle extends AbstractVerticle {
   @Override
   public void start(Future<Void> startFuture) throws Exception {
     instanceScheduler = Sync.getContextScheduler();
-    Sync.runOnFiber(instanceScheduler, () -> {
+    new Fiber<Void>(instanceScheduler, () -> {
       try {
         SyncVerticle.this.start();
         startFuture.complete();
       } catch (Throwable t) {
         startFuture.fail(t);
       }
-    });
+    }).start();
   }
 
   @Override
   public void stop(Future<Void> stopFuture) throws Exception {
-    Sync.runOnFiber(instanceScheduler,  () -> {
+    new Fiber<Void>(instanceScheduler, () -> {
       try {
         SyncVerticle.this.stop();
         stopFuture.complete();
@@ -40,7 +41,7 @@ public abstract class SyncVerticle extends AbstractVerticle {
       } finally {
         Sync.removeContextScheduler();
       }
-    });
+    }).start();
   }
 
   /**
