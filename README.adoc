@@ -10,7 +10,7 @@
 
 *Well, now you can have your cake and eat it...*
 
-Vertx-sync allows you to deploy verticles that run using *Fibers*. Fibers are very lightweight threads that can be
+Vertx-sync allows you to deploy verticles that run using *fibers*. Fibers are very lightweight threads that can be
 blocked without blocking a kernel thread.
 
 This enables you to write your verticle code in a familiar synchronous style (i.e. no callbacks or promises or Rx).
