@@ -93,7 +93,7 @@
  *
  * Vert-sync allows you to receive events from such streams in a synchronous way.
  *
- * You do this by with an instance of {@link io.vertx.ext.sync.HandlerReceiverAdaptor} which implements both
+ * You do this with an instance of {@link io.vertx.ext.sync.HandlerReceiverAdaptor} which implements both
  * {@link io.vertx.core.Handler} and {@link io.vertx.ext.sync.Receiver}. You create an instance using
  * {@link io.vertx.ext.sync.Sync#streamAdaptor()}.
  *

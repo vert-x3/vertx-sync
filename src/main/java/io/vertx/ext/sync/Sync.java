@@ -10,14 +10,14 @@ import io.vertx.ext.sync.impl.HandlerReceiverAdaptorImpl;
 import java.util.function.Consumer;
 
 /**
- * This interface contains various static methods to allowing events and asynchronous results to be accessed
+ * This class contains various static methods to allowing events and asynchronous results to be accessed
  * in a synchronous way.
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public interface Sync {
+public class Sync {
 
-  String FIBER_SCHEDULER_CONTEXT_KEY = "__vertx-sync.fiberScheduler";
+  private static final String FIBER_SCHEDULER_CONTEXT_KEY = "__vertx-sync.fiberScheduler";
 
   /**
    * Invoke an asynchronous operation and obtain the result synchronous.
@@ -28,7 +28,7 @@ public interface Sync {
    * @return  the result
    */
   @Suspendable
-  static <T> T syncResult(Consumer<Handler<AsyncResult<T>>> consumer) {
+  public static <T> T syncResult(Consumer<Handler<AsyncResult<T>>> consumer) {
     try {
       return new AsyncAdaptor<T>() {
         @Override
@@ -54,7 +54,7 @@ public interface Sync {
    * @return  the event
    */
   @Suspendable
-  static <T> T syncEvent(Consumer<Handler<T>> consumer) {
+  public static <T> T syncEvent(Consumer<Handler<T>> consumer) {
     try {
       return new HandlerAdaptor<T>() {
         @Override
@@ -80,7 +80,7 @@ public interface Sync {
    * @return  a wrapped handler that runs the handler on a fiber
    */
   @Suspendable
-  static <T> Handler<T> fiberHandler(Handler<T> handler) {
+  public static <T> Handler<T> fiberHandler(Handler<T> handler) {
     return p -> runOnFiber(getContextScheduler(), () -> handler.handle(p));
   }
 
@@ -92,7 +92,7 @@ public interface Sync {
    * @return  the adaptor
    */
   @Suspendable
-  static <T> HandlerReceiverAdaptor<T> streamAdaptor() {
+  public static <T> HandlerReceiverAdaptor<T> streamAdaptor() {
     return new HandlerReceiverAdaptorImpl<>(getContextScheduler());
   }
 
@@ -105,7 +105,7 @@ public interface Sync {
    * @return  the adaptor
    */
   @Suspendable
-  static <T> HandlerReceiverAdaptor<T> streamAdaptor(Channel<T> channel) {
+  public static <T> HandlerReceiverAdaptor<T> streamAdaptor(Channel<T> channel) {
     return new HandlerReceiverAdaptorImpl<>(getContextScheduler(), channel);
   }
 
@@ -116,7 +116,7 @@ public interface Sync {
    * @param runner  the action
    */
   @Suspendable
-  static void runOnFiber(FiberScheduler fiberScheduler, Runnable runner) {
+  public static void runOnFiber(FiberScheduler fiberScheduler, Runnable runner) {
     new Fiber<Void>(fiberScheduler) {
       @Override
       protected Void run() throws SuspendExecution, InterruptedException {
@@ -131,7 +131,7 @@ public interface Sync {
    * @return  the scheduler
    */
   @Suspendable
-  static FiberScheduler getContextScheduler() {
+  public static FiberScheduler getContextScheduler() {
     Context context = Vertx.currentContext();
     if (context == null) {
       throw new IllegalStateException("Not in context");
@@ -160,7 +160,7 @@ public interface Sync {
    * Remove the scheduler for the current context
    */
   @Suspendable
-  static void removeContextScheduler() {
+  public static void removeContextScheduler() {
     Context context = Vertx.currentContext();
     if (context != null) {
       context.remove(FIBER_SCHEDULER_CONTEXT_KEY);
