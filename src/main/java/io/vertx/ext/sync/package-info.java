@@ -59,7 +59,7 @@
  * 
  * Vertx-sync allows you to get the result of a one-shot asynchronous operation in a synchronous way.
  *
- * This is done by using the {@link io.vertx.ext.sync.Sync#syncResult(java.util.function.Consumer)} method.
+ * This is done by using the {@link io.vertx.ext.sync.Sync#awaitResult(java.util.function.Consumer)} method.
  *
  * The method is executed specifying the asynchronous operation that you want to execute in the form of a {@link java.util.function.Consumer},
  * the consumer is passed the handler at run-time.
@@ -76,7 +76,7 @@
  * == Getting one-shot events
  *
  * Vertx-sync can be used to get one-shot events in a synchronous way, for example firings of timers, or the executing of
- * an end handler. This is achieved using the {@link io.vertx.ext.sync.Sync#syncEvent(java.util.function.Consumer)} method.
+ * an end handler. This is achieved using the {@link io.vertx.ext.sync.Sync#awaitEvent(java.util.function.Consumer)} method.
  *
  * Here's an example:
  *

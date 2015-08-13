@@ -31,7 +31,7 @@ public class Sync {
    * @return  the result
    */
   @Suspendable
-  public static <T> T syncResult(Consumer<Handler<AsyncResult<T>>> consumer) {
+  public static <T> T awaitResult(Consumer<Handler<AsyncResult<T>>> consumer) {
     try {
       return new AsyncAdaptor<T>() {
         @Override
@@ -57,7 +57,7 @@ public class Sync {
    * @return  the event
    */
   @Suspendable
-  public static <T> T syncEvent(Consumer<Handler<T>> consumer) {
+  public static <T> T awaitEvent(Consumer<Handler<T>> consumer) {
     try {
       return new HandlerAdaptor<T>() {
         @Override
@@ -129,7 +129,7 @@ public class Sync {
     FiberScheduler scheduler = context.get(FIBER_SCHEDULER_CONTEXT_KEY);
     if (scheduler == null) {
       Thread eventLoop = Thread.currentThread();
-      scheduler = new FiberExecutorScheduler("mine", command -> {
+      scheduler = new FiberExecutorScheduler("vertx.contextScheduler", command -> {
         if (Thread.currentThread() != eventLoop) {
           context.runOnContext(v -> command.run());
         } else {

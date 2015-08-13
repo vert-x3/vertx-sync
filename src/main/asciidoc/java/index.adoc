@@ -57,7 +57,7 @@ executing a find using the Vert.x Mongo client or sending an event bus message a
 
 Vertx-sync allows you to get the result of a one-shot asynchronous operation in a synchronous way.
 
-This is done by using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#syncResult-java.util.function.Consumer-[Sync.syncResult]` method.
+This is done by using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#awaitResult-java.util.function.Consumer-[Sync.awaitResult]` method.
 
 The method is executed specifying the asynchronous operation that you want to execute in the form of a `link:../../apidocs/java/util/function/Consumer.html[Consumer]`,
 the consumer is passed the handler at run-time.
@@ -70,7 +70,7 @@ EventBus eb = vertx.eventBus();
 
 // Send a message and get the reply synchronously
 
-Message<String> reply = syncResult(h -> eb.send("someaddress", "ping", h));
+Message<String> reply = awaitResult(h -> eb.send("someaddress", "ping", h));
 
 System.out.println("Received reply " + reply.body());
 ----
@@ -80,13 +80,13 @@ In the above example the fiber is blocked until the reply is returned but no ker
 == Getting one-shot events
 
 Vertx-sync can be used to get one-shot events in a synchronous way, for example firings of timers, or the executing of
-an end handler. This is achieved using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#syncEvent-java.util.function.Consumer-[Sync.syncEvent]` method.
+an end handler. This is achieved using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#awaitEvent-java.util.function.Consumer-[Sync.awaitEvent]` method.
 
 Here's an example:
 
 [source,java]
 ----
-long tid = syncEvent(h -> vertx.setTimer(1000, h));
+long tid = awaitEvent(h -> vertx.setTimer(1000, h));
 
 System.out.println("Timer has now fired");
 ----
@@ -142,7 +142,7 @@ EventBus eb = vertx.eventBus();
 vertx.createHttpServer().requestHandler(fiberHandler(req -> {
 
   // Send a message to address and wait for a reply
-  Message<String> reply = syncResult(h -> eb.send("some-address", "blah", h));
+  Message<String> reply = awaitResult(h -> eb.send("some-address", "blah", h));
 
   System.out.println("Got reply: " + reply.body());
 

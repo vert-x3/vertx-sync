@@ -103,7 +103,7 @@ public class TestVerticle extends SyncVerticle {
   protected void testFiberHandler() {
     HttpServer server = vertx.createHttpServer(new HttpServerOptions().setPort(8080));
     server.requestHandler(fiberHandler(req -> {
-      String res = syncResult(h -> ai.methodWithParamsAndHandlerNoReturn("oranges", 23, h));
+      String res = awaitResult(h -> ai.methodWithParamsAndHandlerNoReturn("oranges", 23, h));
       assertEquals("oranges23", res);
       req.response().end();
     }));
@@ -123,7 +123,7 @@ public class TestVerticle extends SyncVerticle {
   @Suspendable
   protected void testExecSyncMethodWithParamsAndHandlerNoReturn() {
     Thread th = Thread.currentThread();
-    String res = syncResult(h -> ai.methodWithParamsAndHandlerNoReturn("oranges", 23, h));
+    String res = awaitResult(h -> ai.methodWithParamsAndHandlerNoReturn("oranges", 23, h));
     assertEquals("oranges23", res);
     assertSame(Thread.currentThread(), th);
     complete();
@@ -131,30 +131,30 @@ public class TestVerticle extends SyncVerticle {
 
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerNoReturn() {
-    String res = syncResult(h -> ai.methodWithNoParamsAndHandlerNoReturn(h));
+    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerNoReturn(h));
     assertEquals("wibble", res);
     complete();
   }
 
   @Suspendable
   protected void testExecSyncMethodWithParamsAndHandlerWithReturn() {
-    String res = syncResult(h -> ai.methodWithParamsAndHandlerWithReturn("oranges", 23, h));
+    String res = awaitResult(h -> ai.methodWithParamsAndHandlerWithReturn("oranges", 23, h));
     assertEquals("oranges23", res);
     complete();
   }
 
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerWithReturn() {
-    String res = syncResult(h -> ai.methodWithNoParamsAndHandlerWithReturn(h));
+    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturn(h));
     assertEquals("wibble", res);
     complete();
   }
 
   @Suspendable
   protected void testExecSyncMethodWithParamsAndHandlerInterface() {
-    ReturnedInterface returned = syncResult(h -> ai.methodWithParamsAndHandlerInterface("apples", 123, h));
+    ReturnedInterface returned = awaitResult(h -> ai.methodWithParamsAndHandlerInterface("apples", 123, h));
     assertNotNull(returned);
-    String res = syncResult(h -> returned.methodWithParamsAndHandlerNoReturn("bananas", 100, h));
+    String res = awaitResult(h -> returned.methodWithParamsAndHandlerNoReturn("bananas", 100, h));
     assertEquals(res, "bananas100");
     complete();
   }
@@ -162,7 +162,7 @@ public class TestVerticle extends SyncVerticle {
   @Suspendable
   protected void testExecSyncMethodThatFails() {
     try {
-      String res = syncResult(h -> ai.methodThatFails("oranges", h));
+      String res = awaitResult(h -> ai.methodThatFails("oranges", h));
       fail("Should throw exception");
     } catch (Exception e) {
       assertTrue(e instanceof VertxException);
@@ -177,7 +177,7 @@ public class TestVerticle extends SyncVerticle {
   protected void testReceiveEvent() {
 
     long start = System.currentTimeMillis();
-    long tid = syncEvent(h -> vertx.setTimer(500, h));
+    long tid = awaitEvent(h -> vertx.setTimer(500, h));
     long end = System.currentTimeMillis();
     assertTrue(end - start >= 500);
     assertTrue(tid >= 0);
