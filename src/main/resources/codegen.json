@@ -1,8 +1,0 @@
-{
-  "name": "Vertx-Sync",
-  "generators": [ {
-    "kind": "class",
-    "fileName": "module.translateQualifiedName(fqn, 'sync') + 'Sync.java'",
-    "templateFileName": "vertx-sync/template/vertx-sync.templ"
-  } ]
-}

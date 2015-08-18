@@ -1,83 +1,63 @@
 package io.vertx.ext.sync;
 
-import co.paralleluniverse.fibers.*;
-import io.vertx.core.*;
+import co.paralleluniverse.fibers.Fiber;
+import co.paralleluniverse.fibers.FiberScheduler;
+import co.paralleluniverse.fibers.Suspendable;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 
 /**
+ * A `Verticle` which runs its `start` and `stop` methods using fibers.
+ *
+ * You should subclass this class instead of `AbstractVerticle` to create any verticles that use vertx-sync.
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
 public abstract class SyncVerticle extends AbstractVerticle {
 
   protected FiberScheduler instanceScheduler;
-  protected Thread eventLoop;
 
   @Override
   public void start(Future<Void> startFuture) throws Exception {
-    if (context.isWorkerContext()) {
-      throw new IllegalStateException("Vert.x sync can only be used with standard verticles");
-    }
-    eventLoop = Thread.currentThread();
-    instanceScheduler = new FiberExecutorScheduler("mine", command -> {
-      if (Thread.currentThread() != eventLoop) {
-        context.runOnContext(v -> command.run());
-      } else {
-        // Just run directly
-        command.run();
+    instanceScheduler = Sync.getContextScheduler();
+    new Fiber<Void>(instanceScheduler, () -> {
+      try {
+        SyncVerticle.this.start();
+        startFuture.complete();
+      } catch (Throwable t) {
+        startFuture.fail(t);
       }
-    });
-    new Fiber<Void>(instanceScheduler) {
-      @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
-        try {
-          SyncVerticle.this.start();
-          startFuture.complete();
-        } catch (Throwable t) {
-          startFuture.fail(t);
-        }
-        return null;
-      }
-    }.start();
+    }).start();
   }
 
   @Override
   public void stop(Future<Void> stopFuture) throws Exception {
-    new Fiber<Void>(instanceScheduler) {
-      @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
-        try {
-          SyncVerticle.this.stop();
-          stopFuture.complete();
-        } catch (Throwable t) {
-          stopFuture.fail(t);
-        }
-        return null;
+    new Fiber<Void>(instanceScheduler, () -> {
+      try {
+        SyncVerticle.this.stop();
+        stopFuture.complete();
+      } catch (Throwable t) {
+        stopFuture.fail(t);
+      } finally {
+        Sync.removeContextScheduler();
       }
-    }.start();
+    }).start();
   }
 
-  private void runOnFiber(Runnable runner) {
-    new Fiber<Void>(instanceScheduler) {
-      @Override
-      protected Void run() throws SuspendExecution, InterruptedException {
-        runner.run();
-        return null;
-      }
-    }.start();
-  }
-
-  public <T> Handler<T> fiberHandler(Handler<T> handler) {
-    return p -> runOnFiber(() -> handler.handle(p));
-  }
-
+  /**
+   * Override this method in your verticle
+   */
   @Override
   @Suspendable
-  public void start() {
+  public void start() throws Exception {
   }
 
+  /**
+   * Optionally override this method in your verticle if you have cleanup to do
+   */
   @Override
   @Suspendable
-  public void stop() {
+  public void stop() throws Exception {
   }
 
 }

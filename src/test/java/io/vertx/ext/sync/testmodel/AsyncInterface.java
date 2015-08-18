@@ -1,6 +1,5 @@
-package io.vertx.ext.testmodel;
+package io.vertx.ext.sync.testmodel;
 
-import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -8,7 +7,6 @@ import io.vertx.core.Handler;
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-@VertxGen
 public interface AsyncInterface {
 
   // Non Handler<AsyncResult<>> methods
@@ -26,6 +24,8 @@ public interface AsyncInterface {
   String methodWithNoParamsAndHandlerWithReturn(Handler<AsyncResult<String>> resultHandler);
 
   void methodWithParamsAndHandlerInterface(String foo, long bar, Handler<AsyncResult<ReturnedInterface>> resultHandler);
+
+  void methodThatFails(String foo, Handler<AsyncResult<String>> resultHandler);
 
 
 }

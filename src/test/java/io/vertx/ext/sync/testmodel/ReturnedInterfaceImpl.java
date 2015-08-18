@@ -1,4 +1,4 @@
-package io.vertx.ext.testmodel;
+package io.vertx.ext.sync.testmodel;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;

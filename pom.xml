@@ -13,6 +13,7 @@
 
   <properties>
     <stack.version>3.1.0-SNAPSHOT</stack.version>
+    <asciidoc.dir>${project.basedir}/src/main/asciidoc</asciidoc.dir>
   </properties>
 
   <dependencyManagement>
@@ -34,14 +35,25 @@
     </dependency>
 
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-codegen</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>quasar-core</artifactId>
-      <version>0.7.0</version>
+      <version>0.7.2</version>
+    </dependency>
+
+    <!--<dependency>-->
+      <!--<groupId>io.vertx</groupId>-->
+      <!--<artifactId>vertx-codegen</artifactId>-->
+      <!--<optional>true</optional>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-docgen</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codetrans</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -64,47 +76,30 @@
   </dependencies>
 
   <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>default-compile</id>
+              <configuration>
+                <annotationProcessors>
+                  <annotationProcessor>io.vertx.docgen.JavaDocGenProcessor</annotationProcessor>
+                </annotationProcessors>
+                <compilerArgs>
+                  <arg>-Adocgen.output=${asciidoc.dir}/java</arg>
+                </compilerArgs>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
-      <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-compiler-plugin</artifactId>-->
-        <!--<version>3.2</version>-->
-        <!--<configuration>-->
-          <!--<source>1.8</source>-->
-          <!--<target>1.8</target>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
-
-
-      <!-- Configure the execution of the compiler to execute the codegen processor -->
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <configuration>
-              <generatedSourcesDirectory>${project.basedir}/src/main/generated</generatedSourcesDirectory>
-              <annotationProcessors>
-                <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
-              </annotationProcessors>
-              <compilerArgs>
-                <arg>-AoutputDirectory=${project.basedir}/src/main</arg>
-              </compilerArgs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>default-testCompile</id>
-            <configuration>
-              <annotationProcessors>
-                <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
-              </annotationProcessors>
-              <compilerArgs>
-                <arg>-AoutputDirectory=${project.basedir}/src/test</arg>
-              </compilerArgs>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <!-- Collecting classpath entries as properties in the form groupId:artifactId:type:[classifier]
            as per http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html -->
@@ -122,6 +117,75 @@
       </plugin>
 
       <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <version>1.5.2</version>
+        <configuration>
+          <sourceDirectory>${asciidoc.dir}</sourceDirectory>
+          <outputDirectory>${project.build.directory}/docs/vertx-sync</outputDirectory>
+          <preserveDirectories>true</preserveDirectories>
+          <relativeBaseDir>true</relativeBaseDir>
+          <backend>html</backend>
+          <doctype>book</doctype>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <configuration>
+              <reportOutputDirectory>${project.build.directory}/docs</reportOutputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-clean</id>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${asciidoc.dir}</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>assemble-docs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <attach>true</attach>
+              <descriptors>
+                <descriptor>src/main/assembly/docs.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.9</version>
@@ -130,8 +194,7 @@
           <!--<systemPropertyVariables>-->
             <!--<co.paralleluniverse.fibers.verifyInstrumentation>true</co.paralleluniverse.fibers.verifyInstrumentation>-->
           <!--</systemPropertyVariables>-->
-          <!-- Turn off before production -->
-          <!-- <argLine>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argLine> -->
+          <!--<argLine>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argLine>-->
 
           <!-- Enable if using compile-time (AoT) instrumentation -->
           <!-- argLine>-Dco.paralleluniverse.fibers.disableAgentWarning</argLine -->
