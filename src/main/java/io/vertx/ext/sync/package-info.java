@@ -45,12 +45,14 @@
  * In order for this to work you must start the JVM specifying the java agent jar which is located int he quasar-core
  * jar.
  * 
- * TODO add this automatically in vertx scripts?
  * TODO how to reference quasar core jar in fatjar?
  * 
  * ----
  * -javaagent:/path/to/quasar/core/quasar-core.jar
  * ----
+ * 
+ * If you are using the `vertx` command line tools, the agent configuration can be enabled by setting the `ENABLE_VERTX_SYNC_AGENT`
+ * environment variable to `true`, before executing `vertx`.
  * 
  * == Getting one-shot async results
  *
