@@ -127,8 +127,6 @@
  * https://github.com/vert-x3/vertx-examples/tree/master/sync-examples[examples repository]
  */
 @Document(fileName = "index.adoc")
-@GenModule(name = "vertx-sync")
 package io.vertx.ext.sync;
 
-import io.vertx.codegen.annotations.GenModule;
 import io.vertx.docgen.Document;
