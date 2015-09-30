@@ -15,7 +15,7 @@
     <stack.version>3.1.0-SNAPSHOT</stack.version>
     <asciidoc.dir>${project.basedir}/src/main/asciidoc</asciidoc.dir>
 
-    <quasar-core.version>0.7.2</quasar-core.version>
+    <quasar-core.version>0.7.3</quasar-core.version>
     <quasar-maven-plugin.version>0.7.2</quasar-maven-plugin.version>
   </properties>
 
@@ -36,13 +36,12 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
     </dependency>
-
     <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>quasar-core</artifactId>
       <version>${quasar-core.version}</version>
+      <classifier>jdk8</classifier>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-docgen</artifactId>
@@ -53,7 +52,6 @@
       <artifactId>vertx-codetrans</artifactId>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -242,7 +240,7 @@
           <!-- argLine>-Dco.paralleluniverse.fibers.disableAgentWarning</argLine -->
 
           <!-- Quasar Agent for JDK 7 -->
-          <argLine>-javaagent:${co.paralleluniverse:quasar-core:jar}</argLine>
+          <argLine>-javaagent:${co.paralleluniverse:quasar-core:jar:jdk8}</argLine>
           <!--<forkCount>1</forkCount>-->
           <!--<reuseForks>true</reuseForks>-->
         </configuration>
