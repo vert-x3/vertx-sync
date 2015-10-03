@@ -16,7 +16,7 @@
  *
  * In some cases, programming using asynchronous APIs can be more challenging than using a direct synchronous style, in
  * particular if you have several operations that you want to do in sequence. Also error propagation is often more complex
- * when using asychronous APIs.
+ * when using asynchronous APIs.
  *
  * Vertx-sync allows you to work with asynchronous APIs, but using a direct synchronous style that you're already
  * familiar with.
@@ -42,7 +42,7 @@
  * Vert.x uses Quasar which implements fibers by using bytecode instrumentation. This is done at run-time using a java
  * agent.
  * 
- * In order for this to work you must start the JVM specifying the java agent jar which is located int he quasar-core
+ * In order for this to work you must start the JVM specifying the java agent jar which is located in the quasar-core
  * jar.
  * 
  * TODO how to reference quasar core jar in fatjar?
@@ -53,6 +53,9 @@
  * 
  * If you are using the `vertx` command line tools, the agent configuration can be enabled by setting the `ENABLE_VERTX_SYNC_AGENT`
  * environment variable to `true`, before executing `vertx`.
+ *
+ * You can also use a offline instrumentation as with the https://github.com/vy/quasar-maven-plugin[quasar-maven-plugin].
+ * Check the http://docs.paralleluniverse.co/quasar/[Quasar documentation] for more details.
  * 
  * == Getting one-shot async results
  *

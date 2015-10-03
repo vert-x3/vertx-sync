@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -14,6 +14,9 @@
   <properties>
     <stack.version>3.1.0-SNAPSHOT</stack.version>
     <asciidoc.dir>${project.basedir}/src/main/asciidoc</asciidoc.dir>
+
+    <quasar-core.version>0.7.2</quasar-core.version>
+    <quasar-maven-plugin.version>0.7.2</quasar-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -37,14 +40,9 @@
     <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>quasar-core</artifactId>
-      <version>0.7.2</version>
+      <version>${quasar-core.version}</version>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>io.vertx</groupId>-->
-      <!--<artifactId>vertx-codegen</artifactId>-->
-      <!--<optional>true</optional>-->
-    <!--</dependency>-->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-docgen</artifactId>
@@ -79,6 +77,22 @@
 
     <pluginManagement>
       <plugins>
+        <!-- Collecting classpath entries as properties in the form groupId:artifactId:type:[classifier]
+             as per http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html -->
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.5.1</version>
+          <executions>
+            <execution>
+              <id>getClasspathFilenames</id>
+              <goals>
+                <goal>properties</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -100,6 +114,34 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>com.vlkan</groupId>
+        <artifactId>quasar-maven-plugin</artifactId>
+        <version>${quasar-maven-plugin.version}</version>
+        <configuration>
+          <check>true</check>
+          <debug>true</debug>
+          <verbose>true</verbose>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>instrument</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!--
+          override the internal dependency to use the same quasar version as the one used by vert.x sync, it
+          works until they change the API.
+          -->
+          <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-core</artifactId>
+            <version>${quasar-core.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
 
       <!-- Collecting classpath entries as properties in the form groupId:artifactId:type:[classifier]
            as per http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html -->
@@ -192,7 +234,7 @@
         <configuration>
 
           <!--<systemPropertyVariables>-->
-            <!--<co.paralleluniverse.fibers.verifyInstrumentation>true</co.paralleluniverse.fibers.verifyInstrumentation>-->
+          <!--<co.paralleluniverse.fibers.verifyInstrumentation>true</co.paralleluniverse.fibers.verifyInstrumentation>-->
           <!--</systemPropertyVariables>-->
           <!--<argLine>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argLine>-->
 
