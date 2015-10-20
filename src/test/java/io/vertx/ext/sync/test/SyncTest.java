@@ -70,6 +70,16 @@ public class SyncTest extends VertxTestBase {
   public void testExecSyncMethodWithParamsAndHandlerInterface() throws Exception {
     runTest(getMethodName());
   }
+  
+  @Test
+  public void testExecSyncMethodWithNoParamsAndHandlerWithReturnNoTimeout() throws Exception {
+    runTest(getMethodName());
+  }
+  
+  @Test
+  public void testExecSyncMethodWithNoParamsAndHandlerWithReturnTimedout() throws Exception {
+    runTest(getMethodName());
+  }
 
   @Test
   public void testExecSyncMethodThatFails() throws Exception {
@@ -80,6 +90,16 @@ public class SyncTest extends VertxTestBase {
 
   @Test
   public void testReceiveEvent() throws Exception {
+    runTest(getMethodName());
+  }
+  
+  @Test
+  public void testReceiveEventTimedout() throws Exception {
+    runTest(getMethodName());
+  }
+  
+  @Test
+  public void testReceiveEventNoTimeout() throws Exception {
     runTest(getMethodName());
   }
 

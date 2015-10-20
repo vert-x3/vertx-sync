@@ -54,4 +54,13 @@ public class AsyncInterfaceImpl implements AsyncInterface {
     vertx.runOnContext(v -> resultHandler.handle(Future.failedFuture(new Exception(foo))));
   }
 
+  @Override
+  public String methodWithNoParamsAndHandlerWithReturnTimeout(Handler<AsyncResult<String>> resultHandler, long timeout) {
+	try {
+		Thread.sleep(timeout);
+	} catch(InterruptedException e) {
+	}
+    vertx.runOnContext(v -> resultHandler.handle(Future.succeededFuture("wibble")));
+    return "flooble";
+  }
 }
