@@ -221,11 +221,7 @@ public class TestVerticle extends SyncVerticle {
 
     long start = System.currentTimeMillis();
     long tid = awaitEvent(h -> vertx.setTimer(500, h), 1000);
-    long end = System.currentTimeMillis();
-    
-    System.out.println(tid);
-    System.out.println(end);
-    
+    long end = System.currentTimeMillis();    
     assertTrue(end - start >= 500);
     assertTrue(tid >= 0);
 
