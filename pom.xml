@@ -41,6 +41,16 @@
       <artifactId>quasar-core</artifactId>
       <version>${quasar-core.version}</version>
       <classifier>jdk8</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>org.latencyutils</groupId>
+          <artifactId>LatencyUtils</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.hdrhistogram</groupId>
+          <artifactId>HdrHistogram</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
