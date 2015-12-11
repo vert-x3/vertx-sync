@@ -10,6 +10,8 @@ import io.vertx.ext.sync.impl.AsyncAdaptor;
 import io.vertx.ext.sync.impl.HandlerAdaptor;
 import io.vertx.ext.sync.impl.HandlerReceiverAdaptorImpl;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 /**
@@ -47,6 +49,35 @@ public class Sync {
       throw new VertxException(t);
     }
   }
+  
+  /**
+   * Invoke an asynchronous operation and obtain the result synchronous.
+   * The fiber will be blocked until the result is available. No kernel thread is blocked.
+   *
+   * @param consumer  this should encapsulate the asynchronous operation. The handler is passed to it.
+   * @param timeout  In milliseconds when to cancel the awaited result
+   * @param <T>  the type of the result
+   * @return  the result or null in case of a time out
+   */
+  @Suspendable
+  public static <T> T awaitResult(Consumer<Handler<AsyncResult<T>>> consumer, long timeout) {
+    try {
+      return new AsyncAdaptor<T>() {
+        @Override
+        protected void requestAsync() {
+          try {
+            consumer.accept(this);
+          } catch (Exception e) {
+            throw new VertxException(e);
+          }
+        }
+      }.run(timeout, TimeUnit.MILLISECONDS);
+    } catch (TimeoutException to) {
+      return null;
+    } catch (Throwable t) {
+      throw new VertxException(t);
+    }
+  }
 
   /**
    * Receive a single event from a handler synchronously.
@@ -69,6 +100,35 @@ public class Sync {
           }
         }
       }.run();
+    } catch (Throwable t) {
+      throw new VertxException(t);
+    }
+  }
+  
+  /**
+   * Receive a single event from a handler synchronously.
+   * The fiber will be blocked until the event occurs. No kernel thread is blocked.
+   *
+   * @param consumer  this should encapsulate the setting of the handler to receive the event. The handler is passed to it.
+   * @param timeout  In milliseconds when to cancel the awaited event
+   * @param <T>  the type of the event
+   * @return  the event
+   */
+  @Suspendable
+  public static <T> T awaitEvent(Consumer<Handler<T>> consumer, long timeout) {
+    try {
+      return new HandlerAdaptor<T>() {
+        @Override
+        protected void requestAsync() {
+          try {
+            consumer.accept(this);
+          } catch (Exception e) {
+            throw new VertxException(e);
+          }
+        }
+      }.run(timeout, TimeUnit.MILLISECONDS);
+    } catch (TimeoutException to) {
+        return null;
     } catch (Throwable t) {
       throw new VertxException(t);
     }

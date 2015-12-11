@@ -27,5 +27,7 @@ public interface AsyncInterface {
 
   void methodThatFails(String foo, Handler<AsyncResult<String>> resultHandler);
 
+  String methodWithNoParamsAndHandlerWithReturnTimeout(Handler<AsyncResult<String>> resultHandler, long timeout);
+
 
 }

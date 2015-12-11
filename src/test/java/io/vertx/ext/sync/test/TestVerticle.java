@@ -27,6 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.*;
 import static io.vertx.ext.sync.Sync.*;
 
+import static org.hamcrest.core.Is.*;
+
 /**
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
@@ -149,6 +151,20 @@ public class TestVerticle extends SyncVerticle {
     assertEquals("wibble", res);
     complete();
   }
+  
+  @Suspendable
+  protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnNoTimeout() {
+    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 2000);
+    assertEquals("wibble", res);
+    complete();
+  }
+  
+  @Suspendable
+  protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnTimedout() {
+    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 500);
+    assertNull(res);
+    complete();
+  }
 
   @Suspendable
   protected void testExecSyncMethodWithParamsAndHandlerInterface() {
@@ -179,6 +195,33 @@ public class TestVerticle extends SyncVerticle {
     long start = System.currentTimeMillis();
     long tid = awaitEvent(h -> vertx.setTimer(500, h));
     long end = System.currentTimeMillis();
+    assertTrue(end - start >= 500);
+    assertTrue(tid >= 0);
+
+    complete();
+  }
+    
+  @Suspendable
+  protected void testReceiveEventTimedout() {
+
+    long start = System.currentTimeMillis();
+    try {
+    	long tid = awaitEvent(h -> vertx.setTimer(500, h), 250);	
+    } catch(NullPointerException npe) {
+    	assertThat(npe, isA(NullPointerException.class));
+    } catch(Exception e) {
+    	assertTrue(false);
+    } finally {
+    	complete();	
+	}    
+  }
+  
+  @Suspendable
+  protected void testReceiveEventNoTimeout() {
+
+    long start = System.currentTimeMillis();
+    long tid = awaitEvent(h -> vertx.setTimer(500, h), 1000);
+    long end = System.currentTimeMillis();    
     assertTrue(end - start >= 500);
     assertTrue(tid >= 0);
 
