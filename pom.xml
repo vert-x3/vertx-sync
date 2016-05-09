@@ -14,7 +14,7 @@
   <properties>
     <stack.version>3.3.0-SNAPSHOT</stack.version>
 
-    <quasar-core.version>0.7.4</quasar-core.version>
+    <quasar-core.version>0.7.5</quasar-core.version>
     <quasar-maven-plugin.version>0.7.3</quasar-maven-plugin.version>
   </properties>
 
