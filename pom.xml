@@ -9,10 +9,10 @@
   </parent>
 
   <artifactId>vertx-sync</artifactId>
-  <version>3.4.0-SNAPSHOT</version>
+  <version>3.3.2</version>
 
   <properties>
-    <stack.version>3.4.0-SNAPSHOT</stack.version>
+    <stack.version>3.3.2</stack.version>
 
     <quasar-core.version>0.7.5</quasar-core.version>
     <quasar-maven-plugin.version>0.7.3</quasar-maven-plugin.version>
