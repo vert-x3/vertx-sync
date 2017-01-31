@@ -6,6 +6,7 @@ import co.paralleluniverse.strands.channels.Channel;
 import co.paralleluniverse.strands.channels.Channels;
 import co.paralleluniverse.strands.channels.ReceivePort;
 import io.vertx.core.Context;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxException;
 import io.vertx.core.eventbus.EventBus;
@@ -15,6 +16,7 @@ import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.sync.HandlerReceiverAdaptor;
+import io.vertx.ext.sync.Sync;
 import io.vertx.ext.sync.SyncVerticle;
 import io.vertx.ext.sync.testmodel.AsyncInterface;
 import io.vertx.ext.sync.testmodel.AsyncInterfaceImpl;
@@ -123,6 +125,34 @@ public class TestVerticle extends SyncVerticle {
   }
 
   @Suspendable
+  protected void testExecNestedSyncMethods() {
+    String res = awaitResult(done -> {
+      fiberHandler((Void ignore) -> {
+        String ab = "A";
+        ab += awaitResult(done2 -> {
+          done2.handle(Future.succeededFuture("B"));
+        });
+        done.handle(Future.succeededFuture(ab));
+      }).handle(null);
+    });
+    assertEquals("AB", res);
+    complete();
+  }
+
+  @Suspendable
+  protected void testExecSyncWithAwaitFiber() {
+    String res = awaitFiber(done -> {
+        String ab = "A";
+        ab += awaitFiber(done2 -> {
+          done2.handle(Future.succeededFuture("B"));
+        });
+        done.handle(Future.succeededFuture(ab));
+    });
+    assertEquals("AB", res);
+    complete();
+  }
+
+  @Suspendable
   protected void testExecSyncMethodWithParamsAndHandlerNoReturn() {
     Thread th = Thread.currentThread();
     String res = awaitResult(h -> ai.methodWithParamsAndHandlerNoReturn("oranges", 23, h));
@@ -151,14 +181,14 @@ public class TestVerticle extends SyncVerticle {
     assertEquals("wibble", res);
     complete();
   }
-  
+
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnNoTimeout() {
     String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 2000);
     assertEquals("wibble", res);
     complete();
   }
-  
+
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnTimedout() {
     String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 500);
@@ -200,28 +230,28 @@ public class TestVerticle extends SyncVerticle {
 
     complete();
   }
-    
+
   @Suspendable
   protected void testReceiveEventTimedout() {
 
     long start = System.currentTimeMillis();
     try {
-    	long tid = awaitEvent(h -> vertx.setTimer(500, h), 250);	
+    	long tid = awaitEvent(h -> vertx.setTimer(500, h), 250);
     } catch(NullPointerException npe) {
     	assertThat(npe, isA(NullPointerException.class));
     } catch(Exception e) {
     	assertTrue(false);
     } finally {
-    	complete();	
-	}    
+    	complete();
+	}
   }
-  
+
   @Suspendable
   protected void testReceiveEventNoTimeout() {
 
     long start = System.currentTimeMillis();
     long tid = awaitEvent(h -> vertx.setTimer(500, h), 1000);
-    long end = System.currentTimeMillis();    
+    long end = System.currentTimeMillis();
     assertTrue(end - start >= 500);
     assertTrue(tid >= 0);
 
