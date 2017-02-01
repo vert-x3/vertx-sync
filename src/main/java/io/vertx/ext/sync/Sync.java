@@ -37,6 +37,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -64,6 +65,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             fiberHandler((Handler<Void> ignored) -> {
@@ -93,6 +95,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -120,6 +123,7 @@ public class Sync {
     try {
       return new HandlerAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -147,6 +151,7 @@ public class Sync {
     try {
       return new HandlerAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
