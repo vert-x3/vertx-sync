@@ -66,6 +66,12 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <!-- version aligned with the rest of the stack -->
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>20.0</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
