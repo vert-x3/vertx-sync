@@ -10,10 +10,12 @@
 
 *Well, now you can have your cake and eat it...*
 
+Vert.x lets you write code without blocking kernel threads for i/o by offering non-blocking implementations of common operations. However, these operations are necessarily asynchronous, meaning that for complex processing pipelines, it is necessary to either nest callbacks (leading to "callback hell" or use a library such as Rx to enable composition). Wouldn't it be nice if you could write asynchronous code that just looked like synchronous code?
+
 Vertx-sync allows you to deploy verticles that run using *fibers*. Fibers are very lightweight threads that can be
 blocked without blocking a kernel thread.
 
-This enables you to write your verticle code in a familiar synchronous style (i.e. no callbacks or promises or Rx).
+This enables you to write your asynchronous verticle code in a familiar synchronous style (i.e. no callbacks or promises or Rx). Consider it syntactic sugar over asynchronous processing. (Note, it cannot magically convert code which will block, such as synchronous JDBC operations, into non-blocking asynchronous code, so you will need to avoid using blocking libraries. If you do use a blocking library, you will block the event loop, which is to be avoided at all times). 
 
 As no kernel threads are blocked your application retains the scalability advantages of a non (kernel thread) blocking
 application.
