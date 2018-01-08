@@ -1,5 +1,6 @@
 package io.vertx.ext.sync.test;
 
+import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.strands.Strand;
 import co.paralleluniverse.strands.channels.Channel;
@@ -30,7 +31,6 @@ import static io.vertx.ext.sync.Sync.*;
 import static org.hamcrest.core.Is.*;
 
 /**
- *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
 public class TestVerticle extends SyncVerticle {
@@ -112,13 +112,13 @@ public class TestVerticle extends SyncVerticle {
     server.listen(res -> {
       assertTrue(res.succeeded());
       HttpClient client = vertx.createHttpClient(new HttpClientOptions().setDefaultPort(8080));
-        client.getNow("/somepath", resp -> {
-          assertTrue(resp.statusCode() == 200);
-          client.close();
-          server.close(res2 -> {
-            complete();
-          });
+      client.getNow("/somepath", resp -> {
+        assertTrue(resp.statusCode() == 200);
+        client.close();
+        server.close(res2 -> {
+          complete();
         });
+      });
     });
   }
 
@@ -151,17 +151,35 @@ public class TestVerticle extends SyncVerticle {
     assertEquals("wibble", res);
     complete();
   }
-  
+
+  @Suspendable
+  private void sleep(long millis) {
+    try {
+      Strand.sleep(millis);
+    } catch (SuspendExecution | InterruptedException suspendExecution) {
+      throw new AssertionError(); // Required to compile, but the try-catch block is reworked by the Quasar instrumentation
+    }
+  }
+
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnNoTimeout() {
-    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 2000);
+    long start = System.currentTimeMillis();
+    String res = awaitResult(h -> {
+      sleep(500);
+      ai.methodWithNoParamsAndHandlerWithReturn(h);
+    }, 2000);
+    long duration = (System.currentTimeMillis() - start);
     assertEquals("wibble", res);
+    assertTrue(duration > 500 && duration < 1000);
     complete();
   }
-  
+
   @Suspendable
   protected void testExecSyncMethodWithNoParamsAndHandlerWithReturnTimedout() {
-    String res = awaitResult(h -> ai.methodWithNoParamsAndHandlerWithReturnTimeout(h, 1000), 500);
+    String res = awaitResult(h -> {
+      sleep(1000);
+      ai.methodWithNoParamsAndHandlerWithReturn(h);
+    }, 500);
     assertNull(res);
     complete();
   }
@@ -182,7 +200,7 @@ public class TestVerticle extends SyncVerticle {
       fail("Should throw exception");
     } catch (Exception e) {
       assertTrue(e instanceof VertxException);
-      VertxException ve = (VertxException)e;
+      VertxException ve = (VertxException) e;
       assertEquals("oranges", ve.getCause().getMessage());
       complete();
     }
@@ -200,28 +218,28 @@ public class TestVerticle extends SyncVerticle {
 
     complete();
   }
-    
+
   @Suspendable
   protected void testReceiveEventTimedout() {
 
     long start = System.currentTimeMillis();
     try {
-    	long tid = awaitEvent(h -> vertx.setTimer(500, h), 250);	
-    } catch(NullPointerException npe) {
-    	assertThat(npe, isA(NullPointerException.class));
-    } catch(Exception e) {
-    	assertTrue(false);
+      long tid = awaitEvent(h -> vertx.setTimer(500, h), 250);
+    } catch (NullPointerException npe) {
+      assertThat(npe, isA(NullPointerException.class));
+    } catch (Exception e) {
+      assertTrue(false);
     } finally {
-    	complete();	
-	}    
+      complete();
+    }
   }
-  
+
   @Suspendable
   protected void testReceiveEventNoTimeout() {
 
     long start = System.currentTimeMillis();
     long tid = awaitEvent(h -> vertx.setTimer(500, h), 1000);
-    long end = System.currentTimeMillis();    
+    long end = System.currentTimeMillis();
     assertTrue(end - start >= 500);
     assertTrue(tid >= 0);
 
