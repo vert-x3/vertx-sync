@@ -37,6 +37,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -49,7 +50,7 @@ public class Sync {
       throw new VertxException(t);
     }
   }
-  
+
   /**
    * Invoke an asynchronous operation and obtain the result synchronous.
    * The fiber will be blocked until the result is available. No kernel thread is blocked.
@@ -64,6 +65,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -92,6 +94,7 @@ public class Sync {
     try {
       return new HandlerAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -104,7 +107,7 @@ public class Sync {
       throw new VertxException(t);
     }
   }
-  
+
   /**
    * Receive a single event from a handler synchronously.
    * The fiber will be blocked until the event occurs. No kernel thread is blocked.
@@ -118,6 +121,7 @@ public class Sync {
   public static <T> T awaitEvent(Consumer<Handler<T>> consumer, long timeout) {
     try {
       return new HandlerAdaptor<T>() {
+        @Suspendable
         @Override
         protected void requestAsync() {
           try {
