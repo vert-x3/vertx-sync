@@ -52,7 +52,7 @@ TODO how to reference quasar core jar in fatjar?
 If you are using the `vertx` command line tools, the agent configuration can be enabled by setting the `ENABLE_VERTX_SYNC_AGENT`
 environment variable to `true`, before executing `vertx`.
 
-You can also use a offline instrumentation as with the https://github.com/vy/quasar-maven-plugin[quasar-maven-plugin].
+You can also use a offline instrumentation as with the https://github.com/vy/quasar-maven-plugin[quasar-maven-plugin] or https://github.com/mtatheonly/quasar-gradle-plugin[quasar-gradle-plugin].
 Check the http://docs.paralleluniverse.co/quasar/[Quasar documentation] for more details.
 
 == Getting one-shot async results
