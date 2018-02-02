@@ -41,6 +41,10 @@
       <classifier>jdk8</classifier>
       <exclusions>
         <exclusion>
+          <groupId>io.dropwizard.metric</groupId>
+          <artifactId>metrics-core</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>org.latencyutils</groupId>
           <artifactId>LatencyUtils</artifactId>
         </exclusion>
