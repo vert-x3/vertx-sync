@@ -31,7 +31,7 @@ NOTE: Vert-sync currently only works with Java.
 In order to use vertx-sync you must deploy your code as instances of `io.vertx.ext.sync.SyncVerticle`.
 You should override the `start()` and (optionally) the `stop()` methods of the verticle.
 
-Those methods *must* be annotated with the `@Suspendable` annotation.
+Those methodsmust* be annotated with the `@Suspendable` annotation.
 
 Once you've written your sync verticle(s) you deploy them in exactly the same way as any other verticle.
 
@@ -62,22 +62,16 @@ executing a find using the Vert.x Mongo client or sending an event bus message a
 
 Vertx-sync allows you to get the result of a one-shot asynchronous operation in a synchronous way.
 
-This is done by using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#awaitResult-java.util.function.Consumer-[Sync.awaitResult]` method.
+This is done by using the {@link io.vertx.ext.sync.Sync#awaitResult(java.util.function.Consumer)} method.
 
-The method is executed specifying the asynchronous operation that you want to execute in the form of a `link:../../apidocs/java/util/function/Consumer.html[Consumer]`,
+The method is executed specifying the asynchronous operation that you want to execute in the form of a {@link java.util.function.Consumer},
 the consumer is passed the handler at run-time.
 
 Here's an example:
 
-[source,java]
+[source,$lang]
 ----
-EventBus eb = vertx.eventBus();
-
-// Send a message and get the reply synchronously
-
-Message<String> reply = awaitResult(h -> eb.send("someaddress", "ping", h));
-
-System.out.println("Received reply " + reply.body());
+{@link examples.Examples#syncResultExample(io.vertx.core.Vertx)}
 ----
 
 In the above example the fiber is blocked until the reply is returned but no kernel thread is blocked.
@@ -85,15 +79,13 @@ In the above example the fiber is blocked until the reply is returned but no ker
 == Getting one-shot events
 
 Vertx-sync can be used to get one-shot events in a synchronous way, for example firings of timers, or the executing of
-an end handler. This is achieved using the `link:../../apidocs/io/vertx/ext/sync/Sync.html#awaitEvent-java.util.function.Consumer-[Sync.awaitEvent]` method.
+an end handler. This is achieved using the {@link io.vertx.ext.sync.Sync#awaitEvent(java.util.function.Consumer)} method.
 
 Here's an example:
 
-[source,java]
+[source,$lang]
 ----
-long tid = awaitEvent(h -> vertx.setTimer(1000, h));
-
-System.out.println("Timer has now fired");
+{@link examples.Examples#syncEventExample(io.vertx.core.Vertx)}
 ----
 
 == Streams of events
@@ -104,31 +96,18 @@ Examples include event bus message consumers and HTTP server requests on an HTTP
 
 Vert-sync allows you to receive events from such streams in a synchronous way.
 
-You do this with an instance of `link:../../apidocs/io/vertx/ext/sync/HandlerReceiverAdaptor.html[HandlerReceiverAdaptor]` which implements both
-`link:../../apidocs/io/vertx/core/Handler.html[Handler]` and `link:../../apidocs/io/vertx/ext/sync/Receiver.html[Receiver]`. You create an instance using
-`link:../../apidocs/io/vertx/ext/sync/Sync.html#streamAdaptor--[Sync.streamAdaptor]`.
+You do this with an instance of {@link io.vertx.ext.sync.HandlerReceiverAdaptor} which implements both
+{@link io.vertx.core.Handler} and {@link io.vertx.ext.sync.Receiver}. You create an instance using
+{@link io.vertx.ext.sync.Sync#streamAdaptor()}.
 
-You can set it as a normal handler and then use the methods on `link:../../apidocs/io/vertx/ext/sync/Receiver.html[Receiver]` to receive
+You can set it as a normal handler and then use the methods on {@link io.vertx.ext.sync.Receiver} to receive
 events synchronously.
 
 Here's an example using an event bus message consumer:
 
-[source,java]
+[source,$lang]
 ----
-EventBus eb = vertx.eventBus();
-
-HandlerReceiverAdaptor<Message<String>> adaptor = streamAdaptor();
-
-eb.<String>consumer("some-address").handler(adaptor);
-
-// Receive 10 messages from the consumer:
-for (int i = 0; i < 10; i++) {
-
-  Message<String> received1 = adaptor.receive();
-
-  System.out.println("got message: " + received1.body());
-
-}
+{@link examples.Examples#streamExample(io.vertx.core.Vertx)}
 ----
 
 == Using a `FiberHandler`
@@ -140,21 +119,9 @@ The fiber handler runs the normal handler on a fiber.
 
 Here's an example:
 
-[source,java]
+[source,$lang]
 ----
-EventBus eb = vertx.eventBus();
-
-vertx.createHttpServer().requestHandler(fiberHandler(req -> {
-
-  // Send a message to address and wait for a reply
-  Message<String> reply = awaitResult(h -> eb.send("some-address", "blah", h));
-
-  System.out.println("Got reply: " + reply.body());
-
-  // Now end the response
-  req.response().end("blah");
-
-})).listen(8080, "localhost");
+{@link examples.Examples#fiberHandlerExample(io.vertx.core.Vertx)}
 ----
 
 == Further examples
