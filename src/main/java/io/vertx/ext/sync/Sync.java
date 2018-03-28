@@ -37,6 +37,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -49,7 +50,37 @@ public class Sync {
       throw new VertxException(t);
     }
   }
-  
+
+  /**
+   * Invoke an asynchronous operation and obtain the result synchronous.
+   * The fiber will be blocked until the result is available. No kernel thread is blocked.
+   * The consumer will be called inside a Fiber.
+   *
+   * @param consumer  this should encapsulate the asynchronous operation. The handler is passed to it.
+   * @param <T>  the type of the result
+   * @return  the result
+   */
+  @Suspendable
+  public static <T> T awaitFiber(Consumer<Handler<AsyncResult<T>>> consumer) {
+    try {
+      return new AsyncAdaptor<T>() {
+        @Override
+        @Suspendable
+        protected void requestAsync() {
+          try {
+            fiberHandler((Handler<Void> ignored) -> {
+              consumer.accept(this);
+            }).handle(null);
+          } catch (Exception e) {
+            throw new VertxException(e);
+          }
+        }
+      }.run();
+    } catch (Throwable t) {
+      throw new VertxException(t);
+    }
+  }
+
   /**
    * Invoke an asynchronous operation and obtain the result synchronous.
    * The fiber will be blocked until the result is available. No kernel thread is blocked.
@@ -64,6 +95,7 @@ public class Sync {
     try {
       return new AsyncAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -78,7 +110,6 @@ public class Sync {
       throw new VertxException(t);
     }
   }
-
   /**
    * Receive a single event from a handler synchronously.
    * The fiber will be blocked until the event occurs. No kernel thread is blocked.
@@ -92,6 +123,7 @@ public class Sync {
     try {
       return new HandlerAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
@@ -104,7 +136,7 @@ public class Sync {
       throw new VertxException(t);
     }
   }
-  
+
   /**
    * Receive a single event from a handler synchronously.
    * The fiber will be blocked until the event occurs. No kernel thread is blocked.
@@ -119,6 +151,7 @@ public class Sync {
     try {
       return new HandlerAdaptor<T>() {
         @Override
+        @Suspendable
         protected void requestAsync() {
           try {
             consumer.accept(this);
