@@ -56,6 +56,10 @@
           <groupId>com.google.protobuf</groupId>
           <artifactId>protobuf-java</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -68,11 +72,11 @@
       <artifactId>vertx-codetrans</artifactId>
       <optional>true</optional>
     </dependency>
+    <!-- Force to 20.0 as that's the stack version -->
     <dependency>
-      <!-- version aligned with the rest of the stack -->
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>19.0</version>
+      <version>20.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
