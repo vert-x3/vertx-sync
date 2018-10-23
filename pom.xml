@@ -15,6 +15,8 @@
 
     <quasar-core.version>0.7.5</quasar-core.version>
     <quasar-maven-plugin.version>0.7.3</quasar-maven-plugin.version>
+
+    <assertj.version>3.11.1</assertj.version>
   </properties>
 
   <dependencyManagement>
@@ -82,6 +84,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
