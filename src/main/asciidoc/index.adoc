@@ -172,7 +172,7 @@ io.vertx.core.VertxException: java.lang.IllegalThreadStateException: Method call
 
 This happens when you call fiber code (e.g., a method annotated with `@Suspendable`) from outside a fiber, such as from an event-loop thread.
 
-In most of the cases the solution lies in wrapping the call to the first fiber code using one of the helper methods from {@link io.vertx.ext.sync.Sync}`awaitResult`, `awaitEvent`, `fiberHandler` and `streamAdaptor`.
+In most of the cases the solution lies in wrapping the call to the first fiber code using one of the helper methods from {@link io.vertx.ext.sync.Sync}: `awaitResult`, `awaitEvent`, `fiberHandler` and `streamAdaptor`.
 
 Suppose that we have a fiber method like the following:
 
@@ -204,3 +204,5 @@ Conversely, if you do not use `fiberHandler` then you will get an exception as a
 // This crashes!
 vertx.eventBus().consumer("read", m -> m.reply(readData()));
 ----
+
+TIP: If you need more flexibility you can always use {@link io.vertx.ext.sync.Sync#getContextScheduler()} to access the verticle context scheduler and start Quasar fibers / strands.
