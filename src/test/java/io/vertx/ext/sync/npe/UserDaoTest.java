@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import co.paralleluniverse.fibers.Fiber;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import io.vertx.core.AsyncResult;
@@ -120,12 +121,16 @@ public class UserDaoTest
 	{
 		Async async = testContext.async();
 		final UserDao userDaoProxy = UserDao.createProxy(vertx, UserDao.SERVICE_ADDRESS);
-		final List<JsonObject> users = Sync.awaitResult(h -> userDaoProxy.findAll(h));
-
-		testContext.verify(h -> {
-			assertThat(Thread.currentThread().getName()).isEqualTo("JUNIT");
-			assertThat(users.size()).isEqualTo(2);
-			async.complete();
-		});
+		
+		new Fiber<Void>(() -> {
+			final List<JsonObject> users = Sync.awaitResult(h -> userDaoProxy.findAll(h));
+			
+			testContext.verify(h -> {
+				assertThat(Thread.currentThread().getName()).isEqualTo("JUNIT");
+				assertThat(users.size()).isEqualTo(2);
+				async.complete();
+			});
+		}).start().get();
+		
 	}
 }
