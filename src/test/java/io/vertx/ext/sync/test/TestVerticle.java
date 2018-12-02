@@ -11,10 +11,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxException;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.http.HttpClient;
-import io.vertx.core.http.HttpClientOptions;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.*;
 import io.vertx.ext.sync.HandlerReceiverAdaptor;
 import io.vertx.ext.sync.SyncVerticle;
 import io.vertx.ext.sync.testmodel.AsyncInterface;
@@ -112,12 +109,16 @@ public class TestVerticle extends SyncVerticle {
     server.listen(res -> {
       assertTrue(res.succeeded());
       HttpClient client = vertx.createHttpClient(new HttpClientOptions().setDefaultPort(8080));
-      client.getNow("/somepath", resp -> {
-        assertTrue(resp.statusCode() == 200);
-        client.close();
-        server.close(res2 -> {
-          complete();
-        });
+      client.getNow("/somepath", ar -> {
+        assertTrue(ar.succeeded());
+        if (ar.succeeded()) {
+          HttpClientResponse resp = ar.result();
+          assertEquals(200, resp.statusCode());
+          client.close();
+          server.close(res2 -> {
+            complete();
+          });
+        }
       });
     });
   }
