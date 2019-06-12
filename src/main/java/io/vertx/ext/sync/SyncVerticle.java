@@ -5,6 +5,7 @@ import co.paralleluniverse.fibers.FiberScheduler;
 import co.paralleluniverse.fibers.Suspendable;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 
 /**
  * A `Verticle` which runs its `start` and `stop` methods using fibers.
@@ -18,7 +19,7 @@ public abstract class SyncVerticle extends AbstractVerticle {
   protected FiberScheduler instanceScheduler;
 
   @Override
-  public void start(Future<Void> startFuture) throws Exception {
+  public void start(Promise<Void> startFuture) throws Exception {
     instanceScheduler = Sync.getContextScheduler();
     new Fiber<Void>(instanceScheduler, () -> {
       try {
@@ -31,7 +32,7 @@ public abstract class SyncVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void stop(Future<Void> stopFuture) throws Exception {
+  public void stop(Promise<Void> stopFuture) throws Exception {
     new Fiber<Void>(instanceScheduler, () -> {
       try {
         SyncVerticle.this.stop();
