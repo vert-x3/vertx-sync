@@ -18,7 +18,7 @@ public class Examples {
 
     // Send a message and get the reply synchronously
 
-    Message<String> reply = awaitResult(h -> eb.send("someaddress", "ping", h));
+    Message<String> reply = awaitResult(h -> eb.request("someaddress", "ping", h));
 
     System.out.println("Received reply " + reply.body());
 
@@ -59,7 +59,7 @@ public class Examples {
     vertx.createHttpServer().requestHandler(fiberHandler(req -> {
 
       // Send a message to address and wait for a reply
-      Message<String> reply = awaitResult(h -> eb.send("some-address", "blah", h));
+      Message<String> reply = awaitResult(h -> eb.request("some-address", "blah", h));
 
       System.out.println("Got reply: " + reply.body());
 
