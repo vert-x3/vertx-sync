@@ -109,7 +109,7 @@ public class TestVerticle extends SyncVerticle {
     server.listen(res -> {
       assertTrue(res.succeeded());
       HttpClient client = vertx.createHttpClient(new HttpClientOptions().setDefaultPort(8080));
-      client.getNow("/somepath", ar -> {
+      client.get("/somepath", ar -> {
         assertTrue(ar.succeeded());
         if (ar.succeeded()) {
           HttpClientResponse resp = ar.result();
