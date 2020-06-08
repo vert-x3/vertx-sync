@@ -13,7 +13,9 @@ import io.vertx.core.Promise;
  * You should subclass this class instead of `AbstractVerticle` to create any verticles that use vertx-sync.
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
+ * @deprecated This project will be removed with Quasar being effectively abandoned
  */
+@Deprecated
 public abstract class SyncVerticle extends AbstractVerticle {
 
   protected FiberScheduler instanceScheduler;

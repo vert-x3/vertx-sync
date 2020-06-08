@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>vertx-sync</artifactId>
+  <name>vertx-sync (DEPRECATED)</name>
   <version>4.0.0-SNAPSHOT</version>
 
   <properties>
