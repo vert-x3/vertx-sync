@@ -1,3 +1,10 @@
+[CAUTION]
+====
+This project is now deprecated with the https://github.com/puniverse/quasar[Quasar project] being effectively abandoned.
+
+In the future we are interested in coming with a programming model abstraction based on top of https://openjdk.java.net/projects/loom/[Project Loom].
+====
+
 = Synchronous but non-OS-thread-blocking verticles
 
 [![Build Status](https://travis-ci.org/vert-x3/vertx-sync.svg?branch=master)](https://travis-ci.org/vert-x3/vertx-sync)

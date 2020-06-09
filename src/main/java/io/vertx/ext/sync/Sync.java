@@ -19,7 +19,9 @@ import java.util.function.Consumer;
  * in a synchronous way.
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
+ * @deprecated This project will be removed with Quasar being effectively abandoned
  */
+@Deprecated
 public class Sync {
 
   private static final String FIBER_SCHEDULER_CONTEXT_KEY = "__vertx-sync.fiberScheduler";

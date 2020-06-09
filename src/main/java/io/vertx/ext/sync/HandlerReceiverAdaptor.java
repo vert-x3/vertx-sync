@@ -9,6 +9,8 @@ import io.vertx.core.Handler;
  * In other words it converts an asynchronous stream of events into a synchronous receiver of events
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
+ * @deprecated This project will be removed with Quasar being effectively abandoned
  */
+@Deprecated
 public interface HandlerReceiverAdaptor<T> extends Handler<T>, Receiver<T> {
 }

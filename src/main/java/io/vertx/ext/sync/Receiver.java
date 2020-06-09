@@ -9,7 +9,9 @@ import co.paralleluniverse.strands.channels.ReceivePort;
  * Note that the `receive` methods may block the calling fiber but will not block an underlying kernel thread.
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
+ * @deprecated This project will be removed with Quasar being effectively abandoned
  */
+@Deprecated
 public interface Receiver<T> {
 
   /**
