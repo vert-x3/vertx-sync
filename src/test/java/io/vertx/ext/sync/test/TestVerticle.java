@@ -109,14 +109,19 @@ public class TestVerticle extends SyncVerticle {
     server.listen(res -> {
       assertTrue(res.succeeded());
       HttpClient client = vertx.createHttpClient(new HttpClientOptions().setDefaultPort(8080));
-      client.get("/somepath", ar -> {
-        assertTrue(ar.succeeded());
-        if (ar.succeeded()) {
-          HttpClientResponse resp = ar.result();
-          assertEquals(200, resp.statusCode());
-          client.close();
-          server.close(res2 -> {
-            complete();
+      client.request(HttpMethod.GET, "/somepath", ar1 -> {
+        assertTrue(ar1.succeeded());
+        if (ar1.succeeded()) {
+          HttpClientRequest req = ar1.result();
+          req.send(ar2 -> {
+            if (ar2.succeeded()) {
+              HttpClientResponse resp = ar2.result();
+              assertEquals(200, resp.statusCode());
+              client.close();
+              server.close(res2 -> {
+                complete();
+              });
+            }
           });
         }
       });
