@@ -176,7 +176,7 @@ public class TestVerticle extends SyncVerticle {
     }, 2000);
     long duration = (System.currentTimeMillis() - start);
     assertEquals("wibble", res);
-    assertTrue(duration > 500 && duration < 1000);
+    assertTrue("Expected 500 < (duration = " + duration + ") < 1000", duration > 500 && duration < 1000);
     complete();
   }
 
