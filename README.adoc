@@ -7,7 +7,7 @@ In the future we are interested in coming with a programming model abstraction b
 
 = Synchronous but non-OS-thread-blocking verticles
 
-[![Build Status](https://travis-ci.org/vert-x3/vertx-sync.svg?branch=master)](https://travis-ci.org/vert-x3/vertx-sync)
+image:https://github.com/vert-x3/vertx-sync/workflows/CI/badge.svg?branch=master["Build Status", link="https://github.com/vert-x3/vertx-sync/actions?query=workflow%3ACI"]
 
 *Love scalability?*
 
