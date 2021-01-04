@@ -33,4 +33,4 @@ Please see the in source asciidoc documentation or the main documentation on the
 of vertx-sync
 
 * Web-site docs
-* link:src/main/asciidoc/java/index.adoc[Java in-source docs]
+* link:src/main/asciidoc/index.adoc[Java in-source docs]
