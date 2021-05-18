@@ -3,8 +3,8 @@
 
   <parent>
     <groupId>io.vertx</groupId>
-    <artifactId>vertx-parent</artifactId>
-    <version>19</version>
+    <artifactId>vertx-ext-parent</artifactId>
+    <version>38</version>
   </parent>
 
   <artifactId>vertx-sync</artifactId>
