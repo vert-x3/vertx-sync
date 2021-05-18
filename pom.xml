@@ -3,8 +3,8 @@
 
   <parent>
     <groupId>io.vertx</groupId>
-    <artifactId>vertx-ext-parent</artifactId>
-    <version>38</version>
+    <artifactId>vertx-parent</artifactId>
+    <version>19</version>
   </parent>
 
   <artifactId>vertx-sync</artifactId>
@@ -31,6 +31,10 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
@@ -66,11 +70,6 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-docgen</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-codetrans</artifactId>
       <optional>true</optional>
     </dependency>
     <!-- Force to 25.1-jre as that's the stack version -->
