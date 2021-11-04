@@ -16,11 +16,11 @@
       
     <name>vertx-sync (DEPRECATED)</name>
       
-    <version>4.1.6-SNAPSHOT</version>
+    <version>4.1.6</version>
       
     <properties>
             
-        <stack.version>4.1.6-SNAPSHOT</stack.version>
+        <stack.version>4.1.6</stack.version>
             
         <quasar-core.version>0.7.10</quasar-core.version>
             
