@@ -31,7 +31,7 @@ NOTE: Vert-sync currently only works with Java.
 In order to use vertx-sync you must deploy your code as instances of `io.vertx.ext.sync.SyncVerticle`.
 You should override the `start()` and (optionally) the `stop()` methods of the verticle.
 
-Those methodsmust* be annotated with the `@Suspendable` annotation.
+Those methods *must* be annotated with the `@Suspendable` annotation.
 
 Once you've written your sync verticle(s) you deploy them in exactly the same way as any other verticle.
 
