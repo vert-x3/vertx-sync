@@ -14,11 +14,11 @@
       
     <artifactId>vertx-sync</artifactId>
       
-    <version>3.9.15-SNAPSHOT</version>
+    <version>3.9.15</version>
       
     <properties>
             
-        <stack.version>3.9.15-SNAPSHOT</stack.version>
+        <stack.version>3.9.15</stack.version>
             
         <quasar-core.version>0.7.10</quasar-core.version>
             
