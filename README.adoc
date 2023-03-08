@@ -1,8 +1,8 @@
 [CAUTION]
 ====
-This project is now deprecated with the https://github.com/puniverse/quasar[Quasar project] being effectively abandoned.
+This project is now deprecated with the https://github.com/puniverse/quasar[Quasar project] being effectively abandoned in Vert.x 4 and removed in Vert.x 5.
 
-In the future we are interested in coming with a programming model abstraction based on top of https://openjdk.java.net/projects/loom/[Project Loom].
+Use https://github.com/vert-x3/vertx-virtual-threads-incubator/[Vert.x virtual thread instead].
 ====
 
 = Synchronous but non-OS-thread-blocking verticles
