@@ -9,10 +9,10 @@
 
   <artifactId>vertx-sync</artifactId>
   <name>vertx-sync (DEPRECATED)</name>
-  <version>4.4.3-SNAPSHOT</version>
+  <version>4.4.3</version>
 
   <properties>
-    <stack.version>4.4.3-SNAPSHOT</stack.version>
+    <stack.version>4.4.3</stack.version>
 
     <quasar-core.version>0.7.10</quasar-core.version>
     <quasar-maven-plugin.version>0.7.9</quasar-maven-plugin.version>
