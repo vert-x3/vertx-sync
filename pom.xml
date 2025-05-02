@@ -12,8 +12,6 @@
   <version>4.5.15-SNAPSHOT</version>
 
   <properties>
-    <stack.version>4.5.15-SNAPSHOT</stack.version>
-
     <quasar-core.version>0.7.10</quasar-core.version>
     <quasar-maven-plugin.version>0.7.9</quasar-maven-plugin.version>
   </properties>
@@ -23,7 +21,7 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-dependencies</artifactId>
-        <version>${stack.version}</version>
+        <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
